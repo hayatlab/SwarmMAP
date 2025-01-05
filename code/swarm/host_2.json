@@ -1,0 +1,30 @@
+[
+    {
+        "exp": 0,
+        "data": {
+            "training_data": 2,
+            "test_data": 0
+        }
+    },
+    {
+        "exp": 1,
+        "data": {
+            "training_data": 2,
+            "test_data": 1
+        }
+    },
+    {
+        "exp": 2,
+        "data": {
+            "training_data": 0,
+            "test_data": 2
+        }
+    },
+    {
+        "exp": 3,
+        "data": {
+            "training_data": 2,
+            "test_data": 3
+        }
+    }
+]
