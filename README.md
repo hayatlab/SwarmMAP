@@ -1,16 +1,11 @@
-<<<<<<< HEAD
-# SwarmMAP
-Swarm learning single-cell transcriptomics
-
-This repository contains the code to reproduce the paper:
-Saldanha, O. L., Goepp, V., Pfeiffer, K., Kim, H., Kramann, R., Hayat, S., & Kather, J. N. (2025). SwarmMAP: Swarm Learning for Decentralized Cell Type Annotation in Single Cell Sequencing Data. bioRxiv, 2025-01. [https://doi.org/10.1101/2025.01.13.632775]
-=======
-# SwarmMAP: Swarm learning for cell type annotation
+# SwarmMAP: Swarm Learning for Decentralized Cell Type Annotation
 
 ## Description
-This repo reproduces the results in the paper \cite[]
+This repository contains the code to reproduce the paper:
+Saldanha, O. L., Goepp, V., Pfeiffer, K., Kim, H., Kramann, R., Hayat, S., & Kather, J. N. (2025). SwarmMAP: Swarm Learning for Decentralized Cell Type Annotation in Single Cell Sequencing Data. bioRxiv, 2025-01. [https://doi.org/10.1101/2025.01.13.632775]
 
 ## Content of this repository
+```
 code/
 ├── mlp/
 │   └── local/
@@ -23,8 +18,8 @@ code/
 │       ├── local_plot_effect_of_repres.py # Visualizes the impact of different representations on model results.
 │       ├── local_plot_f1.py           # Plots F1-score for evaluating classification model performance.
 │       ├── local_plot_f1_xgboost.py   # Plots F1-score for XGBoost classification model.
-│       ├── local_plot_indep_representation.py # Visualizes independent representations of data for analysis.
-│       ├── local_plot_umaps.py        # Plots UMAP (Uniform Manifold Approximation and Projection) for dimensionality reduction visualization.
+│       ├── local_plot_indep_representation.py # Visualizes independent representations of datasets
+│       ├── local_plot_umaps.py        # Plots UMAP for dimensionality reduction visualization.
 │       ├── local_xgboost.py           # Implements XGBoost model training and evaluation.
 │
 ├── prepare_data/
@@ -43,8 +38,7 @@ code/
 ├── utils/
 │   ├── get_heart_markers.R          # R script for identifying heart-related markers from data.
 │   ├── mlp.py                       # Helper functions for MLP model training and evaluation.
-│   ├── sclabel.py                   # Utility functions for label-related tasks (likely related to scRNA-seq).
+│   ├── sclabel.py                   # Utility functions for label-related tasks.
 │   └── write_cell_info.py           # Writes cell-specific information to files for downstream analysis.
+```
 
-
->>>>>>> 147bcbd (describe scripts)
