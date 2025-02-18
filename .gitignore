@@ -1,0 +1,96 @@
+
+# Python-related files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.orig
+
+# Results
+*.pkl
+*.csv
+
+# VSCode-related files
+.vscode/
+
+# Virtual environment directories
+venv/
+.env/
+.venv/
+
+# Log files
+*.log
+*.bak
+
+# macOS and Windows system files
+.DS_Store
+Thumbs.db
+
+# Build and distribution directories
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*.swp
+
+results/*
+
+code/celltypist/
+code/garnett/
+code/integration/
+code/mlp/blood/
+code/mlp/breast/
+code/mlp/heart/
+code/mlp/kidney/
+code/mlp/local/figures/
+code/mlp/lung/
+code/mlp/skin/
+code/prepare_data/cellxgene_templates/
+code/prepare_data/download/
+code/prepare_data/embedding/
+code/prepare_data/normalize_counts/
+code/single_cell_pytorch/
+code/slurm/
+code/swarm_format/
+code/viz/
+data/
+data_11_dec/
+debugging_new_test/
+devCellPy/
+docs/
+figure/
+models/
+notebooks-tutorials/
+notebooks/
+renv/
+scripts/
+sllib/
+tests/
+tmp/
+
+# Output files from slurm
+out_*
+
+# Specific files
+code/.Rprofile
+code/.pybiomart.sqlite
+code/prepare_data/.pybiomart.sqlite
+code/prepare_data/Venn_4.png
+code/prepare_data/concatenated_image.png
+code/prepare_data/filtered_feature_bc_matrix.h5
+*.png
+*.zip
+*.ipynb
+*.sh
+*.txt
+*.Rproj
+*.py
+renv.lock
+tox.ini

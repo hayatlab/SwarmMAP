@@ -148,7 +148,7 @@ name_to_id = {v: k for k, v in id_to_name.items()}
 node_name = [data.get('name') for id_, data in graph.nodes(data=True)]
 
 # ## Relaod adata
-# result_dir, data_dir, adata, studies = mlp.load_dataset("heart", use_union_hvgs=True, filtering=False)
+result_dir, data_dir, adata, studies = mlp.load_dataset("heart", use_union_hvgs=True, filtering=False, label="cell_type")
 
 ## Define cell subtypes 
 cell_subtype_dict = {'Adipocytes #1': 'adipocyte',
@@ -205,6 +205,7 @@ cell_subtype_dict = {'Adipocytes #1': 'adipocyte',
 ## Print cell label "Subclustering" which will be converted to NaNs:
 ## It is the labels in adata.obs["Subclustering"] that are not in cell_subtype_dict
 set(adata.obs["Subclustering"].unique()) - set(cell_subtype_dict.keys())
+adata.obs["Subclustering"].nunique()
 
 ## Map Subclutering variable to a new variable: cell_subtype, using cell_subtype_dict
 adata.obs["cell_subtype"] = adata.obs["Subclustering"].map(cell_subtype_dict)

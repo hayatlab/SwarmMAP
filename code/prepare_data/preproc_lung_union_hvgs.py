@@ -41,6 +41,31 @@ data_dir = '/rwthfs/rz/cluster/work/zd775156/lung/'
 file_paths = glob.glob(data_dir+"7a3f*-*.h5ad")
 assert len(file_paths) == 1
 hla = sc.read_h5ad(file_paths[0])
+hla.obs_keys()
+hla.obs["cell_type"].nunique()
+hla.obs["ann_level_1"].value_counts()
+hla.obs["ann_level_2"].value_counts()
+hla.obs["ann_level_3"].value_counts()
+hla.obs["ann_level_4"].value_counts()
+hla.obs["ann_level_5"].value_counts()
+
+hla.obs["ann_level_1"].nunique()
+hla.obs["ann_level_2"].nunique()
+hla.obs["ann_level_3"].nunique()
+hla.obs["ann_level_4"].nunique()
+hla.obs["ann_level_5"].nunique()
+
+hla.obs["cell_type"].nunique()
+hla.obs["cell_type"].value_counts()
+hla.obs["cell_type_ontology_term_id"].value_counts()
+
+hla.obs["cell_type_ontology_term_id"].nunique()
+
+tmp = hla.obs.copy()
+## filter tissue
+tmp["tissue"].value_counts()
+tmp = tmp[tmp["tissue"] == "lung parenchyma"].copy()
+tmp["cell_type_ontology_term_id"].nunique()
 
 
 ## Load old preprocessed data for comparison

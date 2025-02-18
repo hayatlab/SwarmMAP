@@ -115,8 +115,8 @@ f1_results = pd.concat([
     pd.read_pickle(result_dir_data+"f1_results_local_swarm_cell_type.pkl"),
     pd.read_pickle(result_dir_data+"f1_results_local_swarm_cell_subtype.pkl")], axis=0)
 
-## Filter our Swarm Learning
-f1_results = f1_results[f1_results["Training set"].isin(["Local_1", "Local_2", "Local_3"])]
+## Filter out Swarm Learning
+# f1_results_local = f1_results[f1_results["Training set"].isin(["Local_1", "Local_2", "Local_3"])]
 
 
 ## --------------------------------------------
@@ -176,11 +176,14 @@ plt.suptitle("Cell type")
 plt.subplots_adjust(top=0.85)
 ## Define box_pairs: outer product of f1_micro, f1_macro, f1_weigthted and Training set
 box_pairs = [(("f1_micro", "Local_1"), ("f1_micro", "Local_2")),
-                (("f1_micro", "Local_2"), ("f1_micro", "Local_3")),
-                (("f1_macro", "Local_1"), ("f1_macro", "Local_2")),
-                (("f1_macro", "Local_2"), ("f1_macro", "Local_3")),
-                (("f1_weighted", "Local_1"), ("f1_weighted", "Local_2")),
-                (("f1_weighted", "Local_2"), ("f1_weighted", "Local_3"))]
+             (("f1_micro", "Local_2"), ("f1_micro", "Local_3")),
+             (("f1_micro", "Local_3"), ("f1_micro", "Swarm")),
+             (("f1_macro", "Local_1"), ("f1_macro", "Local_2")),
+             (("f1_macro", "Local_2"), ("f1_macro", "Local_3")),
+             (("f1_macro", "Local_3"), ("f1_macro", "Swarm")),
+             (("f1_weighted", "Local_1"), ("f1_weighted", "Local_2")),
+             (("f1_weighted", "Local_2"), ("f1_weighted", "Local_3")),
+             (("f1_weighted", "Local_3"), ("f1_weighted", "Swarm"))]
 for ax in g.axes.flat:
     add_stat_annotation(ax, data=f1_results_all_ct[f1_results_all_ct["label"]=="cell_type"],
                         x='f1_avg', y='f1_score', hue='Training set',
@@ -188,7 +191,30 @@ for ax in g.axes.flat:
                         test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
 plt.show()
 ## Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_avg_pval.png", dpi=1200)
+g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_avg_pval_lq.png", dpi=300)
+
+
+# 1.1 Cell type, with P values
+g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_type"],
+                x="f1_avg", y="f1_score", hue="Training set", col="organ", kind="box",
+                height=4, aspect=1, sharey=False)
+g.set_axis_labels("F1 averaging method", "F1 Score")
+g.set_titles("Organ: {col_name}")
+plt.suptitle("Cell type")
+plt.subplots_adjust(top=0.85)
+# Define box_pairs: outer product of f1_micro, f1_macro, f1_weigthted and Training set
+box_pairs = [(("f1_micro", "Local_1"), ("f1_micro", "Local_3")),
+             (("f1_macro", "Local_1"), ("f1_macro", "Local_3")),
+             (("f1_weighted", "Local_1"), ("f1_weighted", "Local_3"))]
+for ax in g.axes.flat:
+    add_stat_annotation(ax, data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_type"],
+                        x='f1_avg', y='f1_score', hue='Training set',
+                        box_pairs=box_pairs,
+                        test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
+plt.show()
+# Save figure
+g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_avg_pval_local1_3_lq.png", dpi=300)
+
 
 # 1.2 Cell subtype, with P values
 g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_subtype"],
@@ -201,10 +227,13 @@ plt.subplots_adjust(top=0.85)
 # Define box_pairs: outer product of f1_micro, f1_macro, f1_weigthted and Training set
 box_pairs = [(("f1_micro", "Local_1"), ("f1_micro", "Local_2")),
              (("f1_micro", "Local_2"), ("f1_micro", "Local_3")),
+             (("f1_micro", "Local_3"), ("f1_micro", "Swarm")),
              (("f1_macro", "Local_1"), ("f1_macro", "Local_2")),
              (("f1_macro", "Local_2"), ("f1_macro", "Local_3")),
+             (("f1_macro", "Local_3"), ("f1_macro", "Swarm")),
              (("f1_weighted", "Local_1"), ("f1_weighted", "Local_2")),
-             (("f1_weighted", "Local_2"), ("f1_weighted", "Local_3"))]
+             (("f1_weighted", "Local_2"), ("f1_weighted", "Local_3")),
+             (("f1_weighted", "Local_3"), ("f1_weighted", "Swarm"))]
 for ax in g.axes.flat:
     add_stat_annotation(ax, data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_subtype"],
                         x='f1_avg', y='f1_score', hue='Training set',
@@ -212,7 +241,32 @@ for ax in g.axes.flat:
                         test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
 plt.show()
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_cell_subtype_f1_avg_pval.png", dpi=1200)
+g.savefig(result_dir+"local_f1_score_boxplot_cell_subtype_f1_avg_pval_lq.png", dpi=300)
+
+
+# 1.2 Cell subtype, with P values
+g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_subtype"],
+                x="f1_avg", y="f1_score", hue="Training set", col="organ", kind="box",
+                height=4, aspect=1, sharey=False)
+g.set_axis_labels("F1 averaging method", "F1 Score")
+g.set_titles("Organ: {col_name}")
+plt.suptitle("Cell subtype")
+plt.subplots_adjust(top=0.85)
+# Define box_pairs: outer product of f1_micro, f1_macro, f1_weigthted and Training set
+box_pairs = [(("f1_micro", "Local_1"), ("f1_micro", "Local_3")),
+             (("f1_macro", "Local_1"), ("f1_macro", "Local_3")),
+             (("f1_weighted", "Local_1"), ("f1_weighted", "Local_3"))]
+for ax in g.axes.flat:
+    add_stat_annotation(ax, data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_subtype"],
+                        x='f1_avg', y='f1_score', hue='Training set',
+                        box_pairs=box_pairs,
+                        test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
+plt.show()
+# Save figure
+g.savefig(
+    result_dir+"local_f1_score_boxplot_cell_subtype_f1_avg_pval_local1_3_lq.png", dpi=300)
+
+
 
 # 1.3 Cell type, NO P values
 g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_type"],
@@ -224,7 +278,7 @@ g.set_titles("Organ: {col_name}")
 plt.tight_layout()
 plt.show()
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_avg.png", dpi=1200)
+g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_avg_lq.png", dpi=300)
 
 # 1.4 Cell subtype, NO P values
 g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct["label"] == "cell_subtype"],
@@ -236,7 +290,7 @@ g.set_titles("Organ: {col_name}")
 plt.tight_layout()
 plt.show()
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_cell_subtype_f1_avg.png", dpi=1200)
+g.savefig(result_dir+"local_f1_score_boxplot_cell_subtype_f1_avg_lq.png", dpi=300)
 
 
 
@@ -288,7 +342,174 @@ for ax in g.axes.flat:
                         test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
 plt.show()
 ## Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_f1_weighted_pval.png", dpi=800)
+g.savefig(result_dir+"local_f1_score_boxplot_f1_weighted_pval_in_local_lq.png", dpi=300)
+
+g = sns.catplot(data=f1_weighted, x="organ", y="f1_score", hue="Training set", kind="box",
+                col="label",
+                height=4, aspect=1, sharey=False)
+g.set_axis_labels("Organ", "Weighted F1 Score")
+## Set subfigure titles by hande
+titles = ["Cell type", "Cell subtype"]
+for ax, title in zip(g.axes.flat, titles):
+    ax.set_title(title)
+plt.subplots_adjust(top=0.85)
+# Add statistical annotation to each facet
+box_pairs = [(("heart", "Local_3"), ("heart", "Swarm")),
+             (("lung", "Local_3"), ("lung", "Swarm")),
+             (("breast", "Local_3"), ("breast", "Swarm"))]
+for ax in g.axes.flat:
+    add_stat_annotation(ax, data=f1_weighted, x='organ', y='f1_score', hue='Training set',
+                        box_pairs=box_pairs,
+                        test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
+plt.show()
+# Save figure
+g.savefig(result_dir+"f1_score_boxplot_f1_weighted_pval_local_vs_swarm_lq.png", dpi=300)
+
+
+## --------------------------------------------
+## Run and save statistical tests
+# --------------------------------------------
+
+from scipy.stats import mannwhitneyu
+# Define the groups to compare
+
+# Define all pairs to compare
+comparisons = [
+    ("Local_1", "Local_2"),
+    ("Local_2", "Local_3"),
+    ("Local_3", "Swarm")
+]
+results = []
+
+# Group the data by 'organ' and 'label'
+for (organ, label), group_data in f1_weighted.groupby(["organ", "label"]):
+    for group_1, group_2 in comparisons:
+        # Extract the F1 scores for the two groups
+        scores_group_1 = group_data[group_data["Training set"]
+                                    == group_1]["f1_score"]
+        scores_group_2 = group_data[group_data["Training set"]
+                                    == group_2]["f1_score"]
+
+        # Check if both groups have data
+        if len(scores_group_1) > 0 and len(scores_group_2) > 0:
+            # Perform the Mann-Whitney U test
+            stat, pval = mannwhitneyu(
+                scores_group_1, scores_group_2, alternative='two-sided')
+
+            # Store the results
+            results.append({
+                "organ": organ,
+                "label": label,
+                "group_1": group_1,
+                "group_2": group_2,
+                "p-value": pval,
+                "statistic": stat
+            })
+        else:
+            # Handle cases where one of the groups is empty
+            results.append({
+                "organ": organ,
+                "label": label,
+                "group_1": group_1,
+                "group_2": group_2,
+                "p-value": None,
+                "statistic": None
+            })
+
+# Convert results to a DataFrame
+results_df = pd.DataFrame(results)
+# Display the results
+print(results_df)
+
+results_df.to_csv(result_dir+"f1_weighted_score_p_values.csv", index=False)
+
+# --------------------------------------------
+# Run and save average F1 score and p-values
+# --------------------------------------------
+
+f1_weighted_grouped = f1_weighted.groupby(["organ", "label", "Training set"]).agg(
+    f1_score_mean=("f1_score", "mean"),
+    f1_score_count=("f1_score", "count"),
+    f1_score_std=("f1_score", "std")
+).reset_index().sort_index()
+
+## Compute lower and upper CI using mean, count, and std
+f1_weighted_grouped["f1_score_ci_lower"] = f1_weighted_grouped["f1_score_mean"] - 1.96 * f1_weighted_grouped["f1_score_std"] / np.sqrt(f1_weighted_grouped["f1_score_count"])
+f1_weighted_grouped["f1_score_ci_upper"] = f1_weighted_grouped["f1_score_mean"] + 1.96 * f1_weighted_grouped["f1_score_std"] / np.sqrt(f1_weighted_grouped["f1_score_count"])
+
+## remove std and count columns
+f1_weighted_grouped = f1_weighted_grouped.drop(columns=["f1_score_count", "f1_score_std"])
+
+## set categorical ordering of organ to : heart, lung, breast
+f1_weighted_grouped["organ"] = pd.Categorical(f1_weighted_grouped["organ"], categories=["heart", "lung", "breast"])
+f1_weighted_grouped["label"] = pd.Categorical(f1_weighted_grouped["label"], categories=["cell_type", "cell_subtype"])
+## order f1_weighted_grouped by organ and label
+f1_weighted_grouped = f1_weighted_grouped.sort_values(by=["organ", "label"])
+
+## --------------------------------------------
+## Overall p-value Local_3 vs Swarm
+## --------------------------------------------
+
+# modify f1_score_ci by removing the text between parenthesee
+f1_weighted_grouped["f1_score_ci"] = f1_weighted_grouped["f1_score_ci"].apply(
+    lambda x: x.split("(")[0])
+# convert to float
+f1_weighted_grouped["f1_score_ci"] = f1_weighted_grouped["f1_score_ci"].astype(
+    float)
+# subset training set == "Local_3" and "Swarm"
+f1_weighted_grouped_subset = f1_weighted_grouped[f1_weighted_grouped["Training set"].isin([
+                                                                                          "Local\_3", "Swarm"])]
+
+# group by training set and compute the average f1_score_ci
+f1_weighted_grouped_subset.groupby(["Training set"]).agg(
+    f1_score_ci_mean=("f1_score_mean", "mean")
+).reset_index()
+
+# test for the difference in values between Local_3 and Swarm
+# Define the groups to compare
+group_1 = f1_weighted_grouped_subset[f1_weighted_grouped_subset["Training set"]
+                                     == "Local\_3"]["f1_score_mean"]
+group_2 = f1_weighted_grouped_subset[f1_weighted_grouped_subset["Training set"]
+                                     == "Swarm"]["f1_score_mean"]
+# Perform the Mann-Whitney U test
+stat, pval = mannwhitneyu(group_1, group_2, alternative='two-sided')
+# Display the results
+print(f"statistic: {stat}, p-value: {pval}")
+
+## --------------------------------------------
+## Table of p values for every setting
+## --------------------------------------------
+
+## capitalize the values in organ
+f1_weighted_grouped["organ"] = f1_weighted_grouped["organ"].apply(lambda x: x.capitalize())
+## modify label to "Cell type" and "Cell subtype"
+f1_weighted_grouped["label"] = f1_weighted_grouped["label"].apply(lambda x: "Cell type" if x == "cell_type" else "Cell subtype")
+## modify Training set by replacing "_" with "\_"
+f1_weighted_grouped["Training set"] = f1_weighted_grouped["Training set"].apply(lambda x: x.replace("_", "\_"))
+
+## round all numerical values to 3 digits
+f1_weighted_grouped = f1_weighted_grouped.round(3)
+
+## create a new column f1_score_ci with the format "mean (lower, upper)" 
+f1_weighted_grouped["f1_score_ci"] = f1_weighted_grouped.apply(lambda x: f"{x['f1_score_mean']} ({x['f1_score_ci_lower']}, {x['f1_score_ci_upper']})", axis=1)
+
+## remove f1_score_mean, f1_score_ci_lower, f1_score_ci_upper
+f1_weighted_grouped = f1_weighted_grouped.drop(columns=["f1_score_mean", "f1_score_ci_lower", "f1_score_ci_upper"])
+
+## save as csv
+f1_weighted_grouped.to_csv(result_dir+"f1_weighted_score_mean_ci.csv", index=False)
+
+## save in latex format
+f1_weighted_grouped.to_latex(result_dir+"f1_weighted_score_mean_ci.tex", index=False)
+
+
+
+
+
+
+
+
+
 
 
 # 1.6 Plot only f1_weighted for cell_type and cell_subtype: COL = organ
@@ -301,7 +522,7 @@ plt.suptitle("Weighted F1 Score")
 plt.subplots_adjust(top=0.85)
 plt.show()
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_f1_weighted_by_organ.png", dpi=800)
+g.savefig(result_dir+"local_f1_score_boxplot_f1_weighted_by_organ_lq.png", dpi=300)
 
 # 1.6 Plot only f1_weighted for cell_type and cell_subtype: COL = organ
 g = sns.catplot(data=f1_weighted, x="label", y="f1_score", hue="Training set", kind="box",
@@ -321,7 +542,7 @@ for ax in g.axes.flat:
                         test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
 plt.show()
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_f1_weighted_by_organ_pval.png", dpi=800)
+g.savefig(result_dir+"local_f1_score_boxplot_f1_weighted_by_organ_pval_lq.png", dpi=300)
 
 # --------------------------------------------
 ## Run anova and linear model to check p-values w.r.t training_set_size
@@ -389,62 +610,62 @@ for ax in g.axes.flat:
                         test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
 plt.show()
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_f1_macro_pval.png", dpi=1200)
+g.savefig(result_dir+"local_f1_score_boxplot_f1_macro_pval_lq.png", dpi=300)
 
 
-# ## 2. Barplots
-# ## 2.1. Plot the 3 average methods for f1_score using barplots using catplot:
-# g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct['label']=="cell_type"],
-#                 x="f1_avg", y="f1_score", hue="Training set", col="organ", kind="bar",
-#                 height=4, aspect=1, sharey=False)
-# g.set_axis_labels("F1 averaging", "F1 Score")
-# g.set_titles("{col_name}")
-# plt.suptitle("Cell type")
-# ## add spacing between suptitle and subplots to prevent overlap
-# ## but keep legend outside of the plot
-# plt.subplots_adjust(top=0.85)
-# plt.show()
-# # Save figure in high resolution
-# g.savefig(result_dir+"f1_score_barplot_cell_type_f1_avg.png",
-#             dpi=600)
+## 2. Barplots
+## 2.1. Plot the 3 average methods for f1_score using barplots using catplot:
+g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct['label']=="cell_type"],
+                x="f1_avg", y="f1_score", hue="Training set", col="organ", kind="bar",
+                height=4, aspect=1, sharey=False)
+g.set_axis_labels("F1 averaging", "F1 Score")
+g.set_titles("{col_name}")
+plt.suptitle("Cell type")
+## add spacing between suptitle and subplots to prevent overlap
+## but keep legend outside of the plot
+plt.subplots_adjust(top=0.85)
+plt.show()
+# Save figure in high resolution
+g.savefig(result_dir+"f1_score_barplot_cell_type_f1_avg_lq.png",
+            dpi=150)
 
-# g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct['label']=="cell_subtype"],
-#                 x="f1_avg", y="f1_score", hue="Training set", col="organ", kind="bar",
-#                 height=4, aspect=1, sharey=False)
-# g.set_axis_labels("F1 averaging", "F1 Score")
-# g.set_titles("{col_name}")
-# plt.suptitle("Cell subtype")
-# ## add spacing between suptitle and subplots to prevent overlap
-# ## but keep legend outside of the plot
-# plt.subplots_adjust(top=0.85)
-# plt.show()
-# # Save figure in high resolution
-# g.savefig(result_dir+"f1_score_barplot_cell_subtype_f1_avg.png",
-#             dpi=600)
-
-
-# ## 2.2. Plot only f1_weighted for cell_type and cell_subtype
-# g = sns.catplot(data=f1_weighted, x="organ", y="f1_score", hue="Training set", kind="bar",
-#                 col="label", height=4, aspect=1, sharey=False)
-# g.set_axis_labels("Organ", "Weighted F1 Score")
-# # g.set_titles("Label: {col_name.replace('_', ' ').capitalize()}")
-# ## add overall title "Cell types"
-# # plt.title("Cell type")
-# plt.show()
-# # Save figure
-# g.savefig(result_dir+"f1_score_barplot_f1_weighted.png", dpi=600)
+g = sns.catplot(data=f1_results_all_ct[f1_results_all_ct['label']=="cell_subtype"],
+                x="f1_avg", y="f1_score", hue="Training set", col="organ", kind="bar",
+                height=4, aspect=1, sharey=False)
+g.set_axis_labels("F1 averaging", "F1 Score")
+g.set_titles("{col_name}")
+plt.suptitle("Cell subtype")
+## add spacing between suptitle and subplots to prevent overlap
+## but keep legend outside of the plot
+plt.subplots_adjust(top=0.85)
+plt.show()
+# Save figure in high resolution
+g.savefig(result_dir+"f1_score_barplot_cell_subtype_f1_avg_lq.png",
+            dpi=150)
 
 
-# # 2.2. Plot only f1_weighted for cell_type and cell_subtype
-# g = sns.catplot(data=f1_weighted, x="organ", y="f1_score", hue="Training set", kind="box",
-#                 col="label", height=4, aspect=1, sharey=False)
-# g.set_axis_labels("Organ", "Weighted F1 Score")
-# # g.set_titles("Label: {col_name.replace('_', ' ').capitalize()}")
-# # add overall title "Cell types"
-# # plt.title("Cell type")
-# plt.show()
-# # Save figure
-# g.savefig(result_dir+"f1_score_boxplot_f1_weighted.png", dpi=600)
+## 2.2. Plot only f1_weighted for cell_type and cell_subtype
+g = sns.catplot(data=f1_weighted, x="organ", y="f1_score", hue="Training set", kind="bar",
+                col="label", height=4, aspect=1, sharey=False)
+g.set_axis_labels("Organ", "Weighted F1 Score")
+# g.set_titles("Label: {col_name.replace('_', ' ').capitalize()}")
+## add overall title "Cell types"
+# plt.title("Cell type")
+plt.show()
+# Save figure
+g.savefig(result_dir+"f1_score_barplot_f1_weighte_lq.png", dpi=150)
+
+
+# 2.2. Plot only f1_weighted for cell_type and cell_subtype
+g = sns.catplot(data=f1_weighted, x="organ", y="f1_score", hue="Training set", kind="box",
+                col="label", height=4, aspect=1, sharey=False)
+g.set_axis_labels("Organ", "Weighted F1 Score")
+# g.set_titles("Label: {col_name.replace('_', ' ').capitalize()}")
+# add overall title "Cell types"
+# plt.title("Cell type")
+plt.show()
+# Save figure
+g.savefig(result_dir+"f1_score_boxplot_f1_weighted_lq.png", dpi=150)
 
 
 ## --------------------------------------------
@@ -520,12 +741,96 @@ for ax in g.axes.flat:
                                  for label in labels], width=20)
     # Set the new labels
     ax.set_xticklabels(wrapped_labels, rotation=45, ha='right')
+## Set subfigures titles by hand
+titles = ["Heart", "Lung", "Breast"]
+for ax, title in zip(g.axes.flat, titles):
+    ax.set_title(title, fontsize=13)
 # Loop through each facet and add the statistical annotations
-plt.suptitle("Weighted F1 score per cell type", y=1.0)
+plt.suptitle("F1 score per cell type", y=1.0)
 plt.subplots_adjust(top=0.95)
-g.fig.subplots_adjust(hspace=0.9, wspace=0.40)
+g.fig.subplots_adjust(hspace=0.45, wspace=0.40)
 # Save figure
-g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_per_ct.png", dpi=1200)
+g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_per_ct_lq.png", dpi=300)
+
+
+g = sns.catplot(data=f1_results_per_ct, x="f1_label", y="f1_per_ct", 
+                hue="Training set", row="organ", kind="box",
+                height=4, aspect=3, sharey=False, sharex=False)
+g.set_axis_labels("Cell type", "F1 Score")
+g.set_titles("{row_name}".capitalize())
+for ax in g.axes.flat:
+    # Get the current labels
+    labels = ax.get_xticklabels()
+    # Wrap the labels
+    wrapped_labels = wrap_labels([label.get_text()
+                                 for label in labels], width=20)
+    # Set the new labels
+    ax.set_xticklabels(wrapped_labels, rotation=45, ha='right')
+# Set subfigures titles by hand
+titles = ["Heart", "Lung", "Breast"]
+for ax, title in zip(g.axes.flat, titles):
+    ax.set_title(title, fontsize=13)
+box_pairs = [(("heart", "Local_1"), ("heart", "Local_2")),
+             (("heart", "Local_2"), ("heart", "Local_3")),
+             (("lung", "Local_1"), ("lung", "Local_2")),
+             (("lung", "Local_2"), ("lung", "Local_3")),
+             (("breast", "Local_1"), ("breast", "Local_2")),
+             (("breast", "Local_2"), ("breast", "Local_3"))]
+for ax in g.axes.flat:
+    add_stat_annotation(ax, data=f1_results_per_ct, x='f1_label', y='f1_per_ct', hue='Training set',
+                        # row="organ", 
+                        box_pairs=box_pairs,
+                        test='Mann-Whitney', text_format='star', loc='inside', verbose=2)
+
+
+
+# Generate the catplot
+g = sns.catplot(
+    data=f1_results_per_ct, x="f1_label", y="f1_per_ct",
+    hue="Training set", row="organ", kind="box",
+    height=4, aspect=3, sharey=False, sharex=False
+)
+for ax in g.axes.flat:
+    labels = ax.get_xticklabels()
+    wrapped_labels = wrap_labels([label.get_text()
+                                 for label in labels], width=20)
+    ax.set_xticklabels(wrapped_labels, rotation=45, ha='right')
+titles = ["Heart", "Lung", "Breast"]
+for ax, title in zip(g.axes.flat, titles):
+    ax.set_title(title, fontsize=13)
+g.set_axis_labels("Cell type", "F1 Score")
+g.set_titles("{row_name}".capitalize())
+# Add statistical annotations
+for ax, (organ, organ_data) in zip(g.axes.flatten(), f1_results_per_ct.groupby('organ')):
+    pairs = []
+    for cell_type in organ_data['f1_label'].unique():
+        # Generate all pairwise comparisons for this cell type
+        candidate_pairs = [
+            ((cell_type, 'Local_1'), (cell_type, 'Local_2')),
+            ((cell_type, 'Local_2'), (cell_type, 'Local_3')),
+            ((cell_type, 'Local_3'), (cell_type, 'Swarm'))
+        ]
+        # Validate that both groups have data
+        for pair in candidate_pairs:
+            group1 = organ_data[(organ_data['f1_label'] == pair[0][0]) & (
+                organ_data['Training set'] == pair[0][1])]
+            group2 = organ_data[(organ_data['f1_label'] == pair[1][0]) & (
+                organ_data['Training set'] == pair[1][1])]
+            if not group1.empty and not group2.empty:
+                pairs.append(pair)
+    # Annotate valid pairs
+    if pairs:
+        annotator = Annotator(ax, pairs, data=organ_data,
+                              x='f1_label', y='f1_per_ct', hue='Training set')
+        annotator.configure(test='Mann-Whitney',
+                            text_format='star', loc='inside', verbose=1)
+        annotator.apply_and_annotate()
+plt.suptitle("F1 score per cell type", y=1.0)
+plt.subplots_adjust(top=0.95)
+g.fig.subplots_adjust(hspace=0.45, wspace=0.40)
+plt.show()
+# Save figure
+g.savefig(result_dir+"local_f1_score_boxplot_cell_type_f1_per_ct_pval_lq.png", dpi=300)
 
 
 # 2. Same figures with barplots instead of boxplots
@@ -537,7 +842,7 @@ g.set_yticklabels(rotation=45, fontsize=12, ha="right")
 g.set_titles("{row_name}".capitalize())
 plt.show()
 # Save figure
-g.savefig(result_dir+"f1_score_barplot_cell_type_f1_per_ct.png")
+g.savefig(result_dir+"f1_score_barplot_cell_type_f1_per_ct_lq.png", dpi=300)
 
 # 2.1.2 Plot the 3 average methods for f1_score using barplots using catplot:
 g = sns.catplot(data=f1_results_per_ct, y="f1_label", x="f1_per_ct", hue="Training set", row="organ", kind="bar",
@@ -547,7 +852,7 @@ g.set_yticklabels(rotation=0)
 g.set_titles("{row_name}".capitalize())
 plt.show()
 # Save figure
-g.savefig(result_dir+"f1_score_barplot_cell_type_f1_per_ct.png")
+g.savefig(result_dir+"f1_score_barplot_cell_type_f1_per_ct_lq.png", dpi=300)
 
 # 2.2. Plot only f1_weighted
 g = sns.catplot(data=f1_results_per_ct, x="organ", y="f1_per_ct", hue="Training set", kind="bar",
@@ -557,7 +862,7 @@ g.set_titles("F1 Score: {col_name}")
 g.set_titles("F1 per cell type")
 plt.show()
 # Save figure
-g.savefig(result_dir+"f1_score_barplot_cell_type_f1_per_ct.png")
+g.savefig(result_dir+"f1_score_barplot_cell_type_f1_per_ct_lq.png", dpi=300)
 
 
 # --------------------------------------------
@@ -762,6 +1067,4 @@ g.set_titles("F1 per cell subtype")
 plt.show()
 # Save figure
 g.savefig(result_dir+"local_f1_score_barplot_cell_subtype_f1_per_cst.png")
-
-
 

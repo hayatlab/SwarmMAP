@@ -171,12 +171,33 @@ print("Saved file: ", result_dir +
 
 ## List all files in results_dir
 res_file_list = glob.glob(result_dir + "results*.csv")
+## remove elements from res_file_list which contain "all"
+res_file_list = [file for file in res_file_list if "all" not in file]
 
-## concatenate the dataframes in res_file_list
+repres = ["scVI", "pca"]
+organs = ["heart", "lung", "breast"]
+
 dfs = []
-for file in res_file_list:
-    df = pd.read_csv(file)
-    dfs.append(df)
+for repr in repres:
+    for organ in organs:
+        tmp = pd.read_csv(result_dir+f"results_{organ}_{repr}_50.csv")
+        dfs.append(tmp)
+        
+sim_setting_df = pd.concat(dfs, ignore_index=True)
+
+# Convert the "y_pred" and "y_test" columns from string to list
+sim_setting_df["y_pred"] = sim_setting_df["y_pred"].apply(eval)
+sim_setting_df["y_test"] = sim_setting_df["y_test"].apply(eval)
+
+sim_setting_df.to_csv(result_dir+"results_all_2.csv", index=False)
+
+## Old code to compare more results: --- 
+
+# ## concatenate the dataframes in res_file_list
+# dfs = []
+# for file in res_file_list:
+#     df = pd.read_csv(file)## SOME RESULTS FILE ARE EMPTY
+#     dfs.append(df) 
 
 ## Concatenate the dataframes into a single dataframe
 sim_setting_df = pd.concat(dfs, ignore_index=True)

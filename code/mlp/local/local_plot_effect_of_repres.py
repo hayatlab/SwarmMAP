@@ -43,9 +43,24 @@ warnings.filterwarnings("ignore", category=FutureWarning, message=r".*is_categor
 
 result_dir = "/home/zd775156/sclabel/results/local/effect_of_repres/"
 
+# result_df_respres = pd.read_csv(result_dir+"results_all_2.csv")
+# result_df_counts = pd.read_csv(result_dir+"results_all_counts.csv")
+
+## load f1_results_all_organs.pkl
+with open("/home/zd775156/sclabel/results/local/f1_results_all_organs.pkl", "rb") as f:
+    f1_results_all_organs = pickle.load(f)
+f1_results_all_organs[["organ", "representation", "f1_avg"]].value_counts().sort_index()
+
+# Set order of f1_results_all_organs["representation"] to ["counts", "scVI", "pca"]
+f1_results_all_organs["representation"] = pd.Categorical(
+    f1_results_all_organs["representation"], ["counts", "scVI", "pca"])
+
+# f1_results = pd.concat(
+#     pd.read_pickle(+"f1_results_local_swarm_cell_type.pkl"))
+
 ## Compute f1_score from "results_all.csv" 
 if not os.path.exists(result_dir+"results_all_f1.csv"):
-    result_df = pd.read_csv(result_dir+"results_all.csv")
+    result_df = pd.read_csv(result_dir+"results_all_2.csv")
     
     result_df["y_pred"] = result_df["y_pred"].apply(eval)
     result_df["y_test"] = result_df["y_test"].apply(eval)
@@ -138,3 +153,76 @@ plt.tight_layout()
 plt.show()
 g.savefig(result_dir+"f1_score_boxplot_lung_temp.png",
           dpi=300, bbox_inches='tight')
+
+
+
+# --------------------------------------------------------------------------------------------
+# 3.1 Plot boxplot for heart with counts --------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+
+
+g = sns.catplot(data=f1_results_all_organs[f1_results_all_organs["organ"] == "heart"],
+                hue="train_on_n_studies",
+                y="f1_score",
+                x="representation",
+                col="f1_avg",
+                # col="organ",
+                kind="box", height=4, aspect=1, sharey=True)
+g.set(ylim=(0, 1))
+g.set_axis_labels("Representation", "F1 Score")
+custom_titles = ["Micro F1", "Macro F1", "Weighted F1"]  # Modify as needed
+for ax, title in zip(g.axes.flat, custom_titles):
+    ax.set_title(title)
+sns.move_legend(g, "upper left", bbox_to_anchor=(0.98, 0.5),
+                title="Number of train studies", frameon=False)
+plt.tight_layout()
+plt.show()
+g.savefig(result_dir+"f1_score_boxplot_heart_final.png",
+          dpi=300, bbox_inches='tight')
+ 
+ 
+# --------------------------------------------------------------------------------------------
+# 3.2 Plot boxplot for lung with counts --------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+
+
+g = sns.catplot(data=f1_results_all_organs[f1_results_all_organs["organ"] == "lung"],
+                hue="train_on_n_studies",
+                y="f1_score",
+                x="representation",
+                col="f1_avg",
+                kind="box", height=4, aspect=1, sharey=True)
+g.set(ylim=(0, 1))
+g.set_axis_labels("Representation", "F1 Score")
+custom_titles = ["Micro F1", "Macro F1", "Weighted F1"]  # Modify as needed
+for ax, title in zip(g.axes.flat, custom_titles):
+    ax.set_title(title)
+sns.move_legend(g, "upper left", bbox_to_anchor=(0.98, 0.5),
+                title="Number of train studies", frameon=False)
+plt.tight_layout()
+plt.show()
+g.savefig(result_dir+"f1_score_boxplot_lung_final.png",
+          dpi=300, bbox_inches='tight')
+
+# --------------------------------------------------------------------------------------------
+# 3.3 Plot boxplot for breast with counts --------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+
+g = sns.catplot(data=f1_results_all_organs[f1_results_all_organs["organ"] == "breast"],
+                hue="train_on_n_studies",
+                y="f1_score",
+                x="representation",
+                col="f1_avg",
+                kind="box", height=4, aspect=1, sharey=True)
+g.set(ylim=(0, 1))
+g.set_axis_labels("Representation", "F1 Score")
+custom_titles = ["Micro F1", "Macro F1", "Weighted F1"]  # Modify as needed
+for ax, title in zip(g.axes.flat, custom_titles):
+    ax.set_title(title)
+sns.move_legend(g, "upper left", bbox_to_anchor=(0.98, 0.5),
+                title="Number of train studies", frameon=False)
+plt.tight_layout()
+plt.show()
+g.savefig(result_dir+"f1_score_boxplot_breast_final.png",
+            dpi=300, bbox_inches='tight')
+
